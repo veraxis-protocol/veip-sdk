@@ -1,4 +1,3 @@
-cat > examples/minimal_demo.py <<'PY'
 from veip_sdk.veip_types import AuthorityEnvelope, ActionProposal
 from veip_sdk.authorize import classify
 from veip_sdk.evidence import generate_evidence
@@ -42,4 +41,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-PY
