@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "veip-sdk"
+version = "0.1.0"
+description = "MIT reference implementation of VEIP runtime authorization and Evidence Pack emission."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Veraxis Protocol" }]
+dependencies = []
+
+[tool.setuptools.packages.find]
+include = ["veip_sdk*"]
