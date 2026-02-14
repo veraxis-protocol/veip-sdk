@@ -14,3 +14,17 @@ dependencies = []
 
 [tool.setuptools.packages.find]
 include = ["veip_sdk*"]
+
+[project]
+# keep your existing fields...
+dependencies = [
+  "jsonschema>=4.22.0"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0"
+]
+
+[tool.setuptools.package-data]
+veip_sdk = ["schemas/*.json"]
