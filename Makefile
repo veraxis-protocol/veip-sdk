@@ -10,3 +10,4 @@ test:
 	@pytest -q
 
 ci: check test
+
