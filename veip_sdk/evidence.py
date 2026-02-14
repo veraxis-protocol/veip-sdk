@@ -1,7 +1,7 @@
 import hashlib
 import json
 from typing import Dict, Any
-from .types import Decision, AuthorityEnvelope, ActionProposal
+from .veip_types import Decision, AuthorityEnvelope, ActionProposal
 
 
 def generate_evidence(

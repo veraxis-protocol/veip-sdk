@@ -1,5 +1,5 @@
 from typing import Dict
-from .types import Decision
+from .veip_types import Decision
 
 
 class StateMachine:

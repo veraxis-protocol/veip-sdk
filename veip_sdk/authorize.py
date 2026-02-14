@@ -1,4 +1,4 @@
-from .types import AuthorityEnvelope, ActionProposal, Decision
+from .veip_types import AuthorityEnvelope, ActionProposal, Decision
 
 
 def classify(authority: AuthorityEnvelope, proposal: ActionProposal) -> Decision:
