@@ -90,17 +90,19 @@ No action is executed without explicit classification.
 
 ```
 veip-sdk/
-├── veip/
+├── README.md
+├── LICENSE
+├── pyproject.toml
+├── Makefile
+├── .github/workflows/ci.yml
+├── veip_sdk/
+│   ├── __init__.py
+│   ├── types.py
 │   ├── authorize.py
 │   ├── evidence.py
-│   ├── state_machine.py
-│   └── types.py
-│
-├── examples/
-│   └── minimal_demo.py
-│
-├── pyproject.toml
-└── README.md
+│   └── state_machine.py
+└── examples/
+    └── minimal_demo.py
 ```
 
 ---
