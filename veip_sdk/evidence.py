@@ -1,3 +1,5 @@
+# veip_sdk/evidence.py
+
 from __future__ import annotations
 
 import hashlib
@@ -45,20 +47,27 @@ def generate_evidence(
     context_refs: list[str] | None = None,
     executor: str = "veip-sdk",
     environment: str = "dev",
-    commit: str = "local",
+    commit: str = "localdev",
 ) -> Dict[str, Any]:
     """
     Emit a VEIP Evidence Pack compliant with veip-spec/schemas/veip-evidence-pack.schema.json.
 
-    Notes:
-      - This is a reference implementation; values like policy_id/constraints_ref/context_refs are
-        defaults that should be supplied by integrators in real deployments.
+    This is a reference implementation. Integrators should supply real:
+      - policy_id/policy_version/policy_hash
+      - constraints_ref
+      - context_refs
+      - provenance.build.commit
+      - executor/environment identifiers
     """
     assert_spec_binding()
 
     now = _utc_now_iso()
 
-    # Defaults
+    if not commit:
+        commit = os.getenv("GIT_COMMIT", "localdev")
+    if len(commit) < 7:
+        commit = (commit + "0000000")[:7]
+
     if policy_version is None:
         policy_version = VEIP_SPEC_VERSION
 
@@ -68,7 +77,6 @@ def generate_evidence(
     if context_refs is None:
         context_refs = ["context/example"]
 
-    # Minimal deterministic action_id from proposal contents
     action_fingerprint = _canonical_json(
         {"action_type": proposal.action_type, "payload": _to_plain(proposal.payload)}
     )
@@ -81,7 +89,6 @@ def generate_evidence(
         "authority": {
             "scope_id": authority.scope_id,
             "issuer": authority.issuer,
-            # schema requires these timestamps and a constraints_ref
             "valid_from": now,
             "valid_to": (datetime.now(timezone.utc) + timedelta(days=365)).isoformat(),
             "constraints_ref": constraints_ref,
@@ -110,7 +117,6 @@ def generate_evidence(
                 "status": "SKIPPED",
                 "result_ref": "result/none",
             },
-            # "supervisory": {...} is optional in your schema
         },
         "provenance": {
             "system_id": os.getenv("VEIP_SYSTEM_ID", "veip-sdk-reference"),

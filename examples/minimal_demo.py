@@ -1,3 +1,5 @@
+# examples/minimal_demo.py
+
 from veip_sdk.veip_types import AuthorityEnvelope, ActionProposal
 from veip_sdk.authorize import classify
 from veip_sdk.evidence import generate_evidence
@@ -24,8 +26,9 @@ def main() -> None:
         proposal=proposal,
         decision=decision,
         validate_schema=True,
+        # Must be >= 7 chars per veip-spec schema
+        commit="localdev",
         environment="local",
-        commit="local",
     )
 
     ok, reason = replay_validate(
@@ -38,6 +41,7 @@ def main() -> None:
     print("Decision:", decision.value)
     print("Replay:", ok, reason)
     print("Evidence Pack keys:", list(evidence_pack.keys()))
+    print("Evidence ID:", evidence_pack.get("evidence_id"))
 
 
 if __name__ == "__main__":
