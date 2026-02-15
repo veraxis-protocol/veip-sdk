@@ -24,6 +24,8 @@ def main() -> None:
         proposal=proposal,
         decision=decision,
         validate_schema=True,
+        environment="local",
+        commit="local",
     )
 
     ok, reason = replay_validate(
@@ -35,8 +37,7 @@ def main() -> None:
 
     print("Decision:", decision.value)
     print("Replay:", ok, reason)
-    print("Evidence Pack:")
-    print(evidence_pack)
+    print("Evidence Pack keys:", list(evidence_pack.keys()))
 
 
 if __name__ == "__main__":
