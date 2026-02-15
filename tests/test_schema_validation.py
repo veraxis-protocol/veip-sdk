@@ -7,7 +7,7 @@ from veip_sdk.veip_types import AuthorityEnvelope, ActionProposal
 
 
 def test_generated_pack_validates_schema():
-    authority = AuthorityEnvelope(scope_id="SCOPE1", issuer="Issuer", permitted_actions=["TRANSFER"])
+    authority = AuthorityEnvelope(scope_id="SCOPE1", issuer="Issuer", permitted_actions=["TRANSFER"], valid=True)
     proposal = ActionProposal(action_type="TRANSFER", payload={"amount": 1})
     decision = classify(authority, proposal)
 
