@@ -5,12 +5,35 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "veip-sdk"
 version = "0.1.0"
-description = "MIT reference implementation of VEIP: runtime authorization, Evidence Pack emission, and deterministic replay validation."
+description = "MIT reference implementation of the Veraxis Execution Integrity Protocol (VEIP): runtime authorization, Evidence Pack emission, and deterministic replay validation."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 
-authors = [{ name = "Veraxis Protocol" }]
+authors = [
+  { name = "Veraxis Protocol" }
+]
+
+keywords = [
+  "veip",
+  "ai-governance",
+  "policy-as-code",
+  "state-machine",
+  "audit",
+  "compliance",
+  "execution-integrity"
+]
+
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Security"
+]
 
 dependencies = [
   "jsonschema>=4.22.0"
@@ -22,7 +45,9 @@ dev = [
 ]
 
 [project.urls]
+Homepage = "https://github.com/veraxis-protocol/veip-sdk"
 Source = "https://github.com/veraxis-protocol/veip-sdk"
+Issues = "https://github.com/veraxis-protocol/veip-sdk/issues"
 
 [tool.setuptools.packages.find]
 include = ["veip_sdk*"]

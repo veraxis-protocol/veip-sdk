@@ -6,7 +6,8 @@ __version__ = "0.1.0"
 VEIP_SPEC_VERSION = "0.1.0"
 
 # Schema binding: pin to the exact canonical schema bytes vendored from veip-spec.
-VEIP_SCHEMA_SHA256 = "REPLACE_ME_AFTER_COPY"
+VEIP_SCHEMA_SHA256 = "<PASTE_HASH_HERE>"
+
 
 
 def assert_spec_binding() -> None:
