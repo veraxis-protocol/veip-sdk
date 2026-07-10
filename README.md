@@ -1,39 +1,69 @@
-
 # VEIP SDK
 
-MIT Reference Implementation of the Veraxis Execution Integrity Protocol
+MIT Reference Implementation of the Veraxis Execution Integrity Protocol (VEIP)
 
-## Overview
+---
 
-The VEIP SDK provides a minimal, MIT-licensed reference implementation of the Veraxis Execution Integrity Protocol (VEIP).
+## Executive Summary
 
-This repository demonstrates how to implement:
+The VEIP SDK is a minimal, production-structured reference implementation of the **Veraxis Execution Integrity Protocol (VEIP)**.
 
-* Deterministic state-transition handling
-* Execution-time authorization gating
-* Evidence Pack serialization aligned to the VEIP specification
-* Supervisory classification semantics (ALLOW, DENY, ESCALATE, SUPERVISORY)
+It demonstrates how an AI-enabled system can:
 
-The SDK is designed to accelerate ecosystem adoption and interoperability. It is not a certification engine and does not confer official VEIP compliance status.
+- Enforce authorization *before execution*
+- Perform deterministic state-transition classification
+- Emit structured, schema-valid Evidence Packs
+- Support replay validation of execution decisions
+- Bind implementation behavior to a specific VEIP specification version
+
+This repository is intentionally compact and readable.  
+It is designed for interoperability, sandbox experimentation, and integration scaffolding.
+
+It is **not** a certification engine.
+
+---
+
+## Deterministic Design Principles
+
+This SDK enforces three core invariants:
+
+1. **Authorization Precedes Execution**  
+   No action may be executed without explicit classification.
+
+2. **State Transitions Are Deterministic**  
+   Given identical authority and proposal inputs, classification must be reproducible.
+
+3. **Evidence Emission Is Mandatory**  
+   Every classified action produces a structured Evidence Pack aligned to the VEIP schema.
+
+These properties are test-verified through the included CI and replay validator.
 
 ---
 
 ## Relationship to the VEIP Specification
 
-This SDK implements **VEIP Specification v0.1.0** as defined in the `veip-spec` repository.
+This SDK implements:
 
-The specification defines:
+**VEIP Specification v0.1.0**
 
-* State-transition formalism
-* Authority envelope semantics
-* Evidence Pack schema
-* Conformance Test Suite (CTS) definitions
-* Supervisory Verification Interface (SVI)
+The canonical specification is defined in the `veip-spec` repository and includes:
 
-The SDK demonstrates how these rules can be implemented in practice.
+- Formal state-transition model
+- Authority envelope semantics
+- Evidence Pack JSON Schema (Draft 2020-12)
+- Conformance Test Suite (CTS) structure
+- Supervisory Verification Interface (SVI)
 
-Normative rules are defined in the specification.
-This repository contains executable examples.
+The specification defines the normative rules.  
+This repository provides executable implementation examples.
+
+The SDK enforces:
+
+- Specification version binding
+- Schema hash pinning
+- Schema validation at emission time
+
+This prevents silent drift between implementation and specification.
 
 ---
 
@@ -41,13 +71,18 @@ This repository contains executable examples.
 
 The VEIP SDK is:
 
-* A developer integration scaffold
-* A minimal execution authorization engine
-* An Evidence Pack emitter aligned to the official schema
-* A reference state-machine implementation
-* A foundation for sandbox experimentation
+- A minimal execution authorization gate
+- A deterministic state-machine scaffold
+- A schema-valid Evidence Pack emitter
+- A replay validation demonstrator
+- A developer-facing integration reference
 
-The SDK is intentionally compact and readable.
+It is suitable for:
+
+- Regulatory sandbox experimentation
+- Academic research
+- AI control-plane prototyping
+- Internal enterprise architecture evaluation
 
 ---
 
@@ -55,13 +90,13 @@ The SDK is intentionally compact and readable.
 
 The VEIP SDK is not:
 
-* The official VEIP conformance validator
-* The deterministic replay verification engine
-* The certification authority
-* A registry implementation
-* A regulatory endorsement mechanism
+- The official VEIP conformance validator
+- The Verifier Core
+- The registry or certification authority
+- A regulatory endorsement mechanism
+- A cryptographically sealed audit infrastructure
 
-Official conformance validation and certification are governed separately through the VEIP Verifier Core and Registry infrastructure.
+Certification and authoritative validation are governed separately through the VEIP Verifier Core and Registry layers.
 
 ---
 
@@ -69,26 +104,27 @@ Official conformance validation and certification are governed separately throug
 
 The SDK illustrates the VEIP execution control-plane:
 
-AI System
-→ Action Proposal
-→ VEIP Authorization Gate
-→ State Transition Evaluation
-→ Execution (if permitted)
-→ Evidence Pack Emission
+AI System  
+→ Action Proposal  
+→ VEIP Authorization Gate  
+→ Deterministic Classification  
+→ Execution (if permitted)  
+→ Evidence Pack Emission  
+→ Replay Validation (optional)
 
-Each proposed action:
+Each action:
 
-1. Is classified under a defined authority envelope
-2. Results in a deterministic decision
-3. Produces a structured Evidence Pack
-
-No action is executed without explicit classification.
+1. Is scoped under an authority envelope
+2. Is deterministically classified (ALLOW / DENY / ESCALATE / SUPERVISORY)
+3. Produces a schema-valid Evidence Pack
+4. Can be replay-validated against its inputs
 
 ---
 
 ## Repository Structure
 
 ```
+
 veip-sdk/
 ├── README.md
 ├── LICENSE
@@ -96,14 +132,19 @@ veip-sdk/
 ├── Makefile
 ├── .github/workflows/ci.yml
 ├── veip_sdk/
-│   ├── __init__.py
-│   ├── types.py
+│   ├── **init**.py
 │   ├── authorize.py
 │   ├── evidence.py
-│   └── state_machine.py
+│   ├── replay.py
+│   ├── schema.py
+│   ├── state_machine.py
+│   ├── veip_types.py
+│   └── schemas/
+│       └── veip-evidence-pack.schema.json
 └── examples/
-    └── minimal_demo.py
-```
+└── minimal_demo.py
+
+````
 
 ---
 
@@ -112,46 +153,95 @@ veip-sdk/
 Python 3.10+
 
 ```bash
-pip install -e .
-```
+pip install -e ".[dev]"
+````
 
 ---
 
-## Minimal Example
+## Local CI Verification
+
+Run:
+
+```bash
+make ci
+```
+
+Expected output:
+
+```
+OK: Python syntax checks passed
+..... [100%]
+```
+
+This confirms:
+
+* Schema binding integrity
+* Replay validator correctness
+* Deterministic classification
+* Evidence Pack schema compliance
+
+---
+
+## Minimal End-to-End Example
+
+Run:
 
 ```bash
 python examples/minimal_demo.py
 ```
 
-The example:
+Expected output:
 
-* Proposes an action
-* Evaluates authorization
-* Performs state transition classification
-* Emits a VEIP Evidence Pack (JSON)
+```
+Decision: ALLOW
+Replay: True OK
+Evidence Pack keys: ['schema_version', 'evidence_id', 'created_at', 'authority', 'policy', 'action', 'decision', 'execution', 'provenance']
+Evidence ID: <uuid>
+```
 
-The resulting artifact aligns with the schema defined in `veip-spec`.
+This demonstrates:
+
+* Proposal submission
+* Authorization classification
+* Evidence Pack emission
+* Schema validation
+* Replay validation
 
 ---
 
-## Early Production Grade Posture
+## Specification Binding Safeguards
 
-This SDK is structured for integration into regulated environments with the following properties:
+The SDK enforces two integrity controls:
 
-* Deterministic transition semantics
+1. Schema SHA-256 pinning
+2. VEIP specification version matching
+
+If the canonical schema changes without updating the SDK, execution fails explicitly.
+
+This protects against silent compatibility drift.
+
+---
+
+## Early Production-Grade Posture
+
+This SDK supports integration into regulated architectures with:
+
+* Deterministic execution semantics
 * Explicit authority scoping
-* Versioned Evidence Pack schema alignment
-* Clear separation between authorization and execution
+* Structured Evidence emission
+* Replay-verifiable decision paths
+* Version binding safeguards
 
-However, production deployments require additional controls including:
+However, production environments require additional controls:
 
-* Cryptographic sealing
+* Cryptographic sealing (hash chaining / Merkle anchoring)
 * Secure time sources
 * Tamper-evident storage
 * Operational resilience hardening
 * Independent security review
+* Separation of duties enforcement
 
-This repository does not implement those infrastructure layers.
+These layers are intentionally out of scope for this repository.
 
 ---
 
@@ -160,7 +250,7 @@ This repository does not implement those infrastructure layers.
 SDK Version: 0.1.0
 Aligned Specification Version: 0.1.0
 
-Breaking changes will follow semantic versioning.
+Breaking changes follow semantic versioning.
 
 ---
 
@@ -168,26 +258,27 @@ Breaking changes will follow semantic versioning.
 
 This repository is licensed under the MIT License.
 
-You are free to:
+You may:
 
 * Use
 * Modify
 * Integrate
 * Commercialize
 
-Subject to MIT license terms.
+Subject to MIT terms.
 
-Use of the terms “VEIP Certified” or “VEIP Compliant” is governed by the VEIP trademark and registry policy.
+Use of “VEIP Certified” or “VEIP Compliant” is governed by trademark and registry policy.
 
 ---
 
 ## Contribution Policy
 
-Contributions must preserve VEIP invariants:
+Contributions must preserve the following invariants:
 
 1. Authorization precedes execution.
 2. State transitions remain explicit and deterministic.
-3. Evidence emission is mandatory for classified actions.
+3. Evidence emission remains mandatory.
+4. Schema alignment must remain enforced.
 
 Pull requests may require alignment with the VEIP specification.
 
@@ -195,6 +286,9 @@ Pull requests may require alignment with the VEIP specification.
 
 ## Disclaimer
 
-This SDK is provided “as is” without warranty of any kind.
-It is a reference implementation of an open specification and does not constitute regulatory approval.
+This SDK is provided “as is,” without warranty of any kind.
 
+It is a reference implementation of an open protocol and does not constitute regulatory approval or certification.
+
+```
+```
