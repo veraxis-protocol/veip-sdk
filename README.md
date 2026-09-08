@@ -4,6 +4,18 @@ MIT Reference Implementation of the Veraxis Execution Integrity Protocol (VEIP)
 
 ---
 
+## Role in Open Institutional Computation
+
+**Category:** Open Institutional Computation  
+**This component:** Reference implementation of the VEIP execution-integrity boundary — deterministic classification of a proposed action against supplied authority, and emission of a schema-valid Evidence Pack  
+**Upstream:** Machine-operational authority/control state, already established through authorized institutional interpretation and admission (the Veraxis reference path for that upstream problem is [OIC — Open Institutional Compiler](https://github.com/veraxis-protocol/Institutional-Compiler))  
+**Downstream:** Evidence Packs consumed by replay validation, the VEIP Verifier Core, registries, and enforcement runtimes  
+**Canonical category thesis:** https://github.com/veraxis-protocol/institutional-continuity/blob/main/THESIS.md
+
+Architectural role does not imply production readiness; see "What This Repository Is Not" and "Early Production-Grade Posture" below for the exact demonstrated scope.
+
+---
+
 ## Executive Summary
 
 The VEIP SDK is a minimal, production-structured reference implementation of the **Veraxis Execution Integrity Protocol (VEIP)**.
@@ -97,6 +109,14 @@ The VEIP SDK is not:
 - A cryptographically sealed audit infrastructure
 
 Certification and authoritative validation are governed separately through the VEIP Verifier Core and Registry layers.
+
+---
+
+## Upstream Boundary
+
+The SDK begins at a boundary where machine-operational authority/control inputs have already been supplied. It does not establish whether the original human governing source was interpreted or admitted correctly. The upstream reference path for that problem is OIC.
+
+An authority envelope supplied to this SDK is an *input*. The SDK binds and classifies against it; it does not originate the institutional authority that envelope represents, and a schema-valid Evidence Pack records that binding rather than proving the upstream authority was legitimate, correctly interpreted, properly admitted, or currently applicable.
 
 ---
 
